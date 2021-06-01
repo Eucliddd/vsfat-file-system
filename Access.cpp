@@ -39,7 +39,7 @@ void ACCESS::load(int id) {
     Read_User.clear();
     Write_User.clear();
 
-    QDir temDir("../login/disk.txt");
+    QDir temDir("./disk.txt");
     QString filePath = temDir.absolutePath();
     ifstream read(filePath.toStdString());
     read.seekg(id*DISK_SIZE);

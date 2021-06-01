@@ -101,7 +101,7 @@ bool FILE_SYSTEM::fcreate(string user_name, string filename) {
 
 /**/
 void FILE_SYSTEM::loadFolder() {
-    QDir temDir("../login/index.txt");
+    QDir temDir("./index.txt");
     QString filePath = temDir.absolutePath();
     fstream r(filePath.toStdString());
     int id, sub;
@@ -149,7 +149,7 @@ void FILE_SYSTEM::loadFolder() {
 
 /*д*/
 void FILE_SYSTEM::saveFolder() {
-    QDir temDir("../login/index.txt");
+    QDir temDir("./index.txt");
     QString filePath = temDir.absolutePath();
     ofstream w(filePath.toStdString());
 
@@ -235,7 +235,7 @@ void FILE_SYSTEM::init(){
 
     Cur_folder=0;
     loadFolder();
-    QDir temDir("../login/disk.txt");
+    QDir temDir("./disk.txt");
     QString filePath = temDir.absolutePath();
     ifstream r(filePath.toStdString());
     r>>Super.cur>>Super.rest;
@@ -255,7 +255,7 @@ void FILE_SYSTEM::format(){
         Folder[i].File_list.clear();
         Folder[i].Folder_list.clear();
     }
-    QDir temDir("../login/index.txt");
+    QDir temDir("./index.txt");
     QString filePath = temDir.absolutePath();
     ofstream w(filePath.toStdString());
 
@@ -345,7 +345,7 @@ void FILE_SYSTEM::deletFile(int pos,string name){
 
 void FILE_SYSTEM::writelog(string op){
 
-    QDir temDir("../login/log.txt");
+    QDir temDir("./log.txt");
     QString filePath = temDir.absolutePath();
     ofstream w;
     w.open(filePath.toStdString(),ios::app);

@@ -7,7 +7,7 @@ bool FILES::isUsed() {
 
 void FILES::load() {
     Data.clear();
-    QDir temDir("../login/disk.txt");
+    QDir temDir("./disk.txt");
     QString filePath = temDir.absolutePath();
     FILE * read = fopen(filePath.toStdString().c_str(), "r+");
     stringstream ss;

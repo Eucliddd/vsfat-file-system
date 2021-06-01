@@ -15,7 +15,7 @@ string getTime() {
 >> id - 需要写入的磁盘号
 */
 void writeDisk(string str, int id) {
-    QDir temDir("../login/disk.txt");
+    QDir temDir("./disk.txt");
     QString filePath = temDir.absolutePath();
     while (str.size() < DISK_SIZE) str.push_back('\0');
     //if(str.size()==DISK_SIZE-1) str.push_back('\0');

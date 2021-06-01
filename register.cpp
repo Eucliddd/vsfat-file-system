@@ -13,13 +13,13 @@ Register::Register(QWidget *parent) :
 {
     ui->setupUi(this);
     //添加背景图片
-    QDir temDir("../login/pic/register_icon.jpg");
-    QString filePath = temDir.absolutePath();
+    QDir temDir(":/pic/register_icon.jpg");
+    QString filePath = temDir.canonicalPath();
     this->setWindowIcon(QIcon(filePath));
     ui->userLineEdit->setFocus();
     QPalette PAllbackground = this->palette();
-    QDir temDir2("../login/pic/register.jpg");
-    QString filePath2 = temDir2.absolutePath();
+    QDir temDir2(":/pic/register.jpg");
+    QString filePath2 = temDir2.canonicalPath();
     QImage ImgAllbackground(filePath2);
     QImage fitimgpic=ImgAllbackground.scaled(this->width(),this->height(), Qt::IgnoreAspectRatio);
     PAllbackground.setBrush(QPalette::Window, QBrush(fitimgpic));
@@ -37,7 +37,7 @@ bool Register::is_repeat(string str)
     int flag = 0;
     string user, pwd;
     ifstream read;
-    QDir temDir("../login/user_pwd.txt");
+    QDir temDir("./user_pwd.txt");
     QString filePath = temDir.absolutePath();
     read.open(filePath.toStdString(), ios_base::in);
     while(read >> user >> pwd)
@@ -75,7 +75,7 @@ void Register::on_submit_clicked()
             QMessageBox::question(this, "提示", "注册成功，进入登录界面", QMessageBox::Yes);
             //保存注册信息
             ofstream write;
-            write.open("../login/user_pwd.txt",ios::app);
+            write.open(":/user_pwd.txt",ios::app);
             write  << user << " " << pwd << endl;
             write.close();
             //返回登录界面

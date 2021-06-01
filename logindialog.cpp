@@ -3,20 +3,21 @@
 #include "QMessageBox.h"
 #include "register.h"
 #include <fstream>
-#include <all.h>
+#include "all.h"
+#include <QStandardPaths>
 extern FILE_SYSTEM System;
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LoginDialog)
 {
     ui->setupUi(this);
-    QDir temDir("../login/pic/login_icon.png");
-    QString filePath = temDir.absolutePath();
+    QDir temDir(":/pic/login_icon.png");
+    QString filePath = temDir.canonicalPath();
     this->setWindowIcon(QIcon(filePath));
     //添加背景图片
     QPalette PAllbackground = this->palette();
-    QDir temDir2("../login/pic/login.jpg");
-    QString filePath2 = temDir2.absolutePath();
+    QDir temDir2(":/pic/login.jpg");
+    QString filePath2 = temDir2.canonicalPath();
     QImage ImgAllbackground(filePath2);
     QImage fitimgpic=ImgAllbackground.scaled(this->width(),this->height(), Qt::IgnoreAspectRatio);
     PAllbackground.setBrush(QPalette::Window, QBrush(fitimgpic));
@@ -34,8 +35,9 @@ bool LoginDialog::is_success(string u, string p)
     int flag=0;//密码不匹配为0
     string ruser,rpwd;
     ifstream read;
-    QDir temDir("../login/user_pwd.txt");
+    QDir temDir("./user_pwd.txt");
     QString filePath = temDir.absolutePath();
+    qDebug()<<QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);;
     read.open(filePath.toStdString(), ios_base::in);
     while(read >> ruser >> rpwd)
         if(u == ruser && p == rpwd)

@@ -5,12 +5,12 @@ myButton::myButton(string name,int isFolder,QWidget *parent): QPushButton(parent
     this->name=name;
     this->isFolder=isFolder;
 
-    QDir temDir("../login/pic/folder.png");
-    QDir temDir2("../login/pic/txt.png");
-    QString filePath = temDir.absolutePath();
+    QDir temDir(":/pic/folder.png");
+    QDir temDir2(":/pic/txt.png");
+    QString filePath = temDir.canonicalPath();
 
-    if(isFolder)this->setIcon(QIcon( temDir.absolutePath()));
-    else this->setIcon(QIcon( temDir2.absolutePath()));
+    if(isFolder)this->setIcon(QIcon( temDir.canonicalPath()));
+    else this->setIcon(QIcon( temDir2.canonicalPath()));
 
     this->setFixedSize(50,50);
     this->setIconSize(QSize(50,50));

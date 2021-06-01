@@ -5,7 +5,7 @@
 int SUPER::load() {
     //超级块变为普通块时，如果没有空闲块返回-1
     if (cur == -1) return -1;
-    QDir temDir("../login/disk.txt");
+    QDir temDir("./disk.txt");
     QString filePath = temDir.absolutePath();
     ifstream read(filePath.toStdString());
     qDebug()<<filePath<<endl;

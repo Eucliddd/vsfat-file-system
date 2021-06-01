@@ -72,4 +72,14 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     disk.txt \
-    index.txt
+    index.txt \
+    pic/folder.png \
+    pic/login.jpg \
+    pic/login_icon.png \
+    pic/register.jpg \
+    pic/register_icon.jpg \
+    pic/txt.png \
+    user_pwd.txt
+
+RESOURCES += \
+    resource.qrc

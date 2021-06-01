@@ -193,8 +193,8 @@ void MainWindow::initTree()
             li.push_back(System.Folder[front].Folder_list[i]);
             q.push(li[i-1]);
             item = new QStandardItem(QString::fromStdString(System.Folder[li[i-1]].Name));
-            QDir temDir("../login/pic/folder.png");
-            QString filePath = temDir.absolutePath();
+            QDir temDir(":/pic/folder.png");
+            QString filePath = temDir.canonicalPath();
             item->setIcon( QIcon(filePath));//�ǵø�·��������
             m++;
             s.push(m);
@@ -207,8 +207,8 @@ void MainWindow::initTree()
         {
             QStandardItem *item = new QStandardItem(QString::fromStdString(System.Files[t[b]].Name));
             cout<<"name --:"<<System.Files[t[b]].Name<<endl;
-            QDir temDir("../login/pic/txt.png");
-            QString filePath = temDir.absolutePath();
+            QDir temDir(":/pic/txt.png");
+            QString filePath = temDir.canonicalPath();
             item->setIcon( QIcon(filePath));//�ǵø�·��������
             QStandardItem *lastItem =items[last];
             lastItem->appendRow(item);

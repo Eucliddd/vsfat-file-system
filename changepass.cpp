@@ -7,13 +7,13 @@ Changepass::Changepass(QWidget *parent) :
     ui(new Ui::Changepass)
 {
     ui->setupUi(this);
-    QDir temDir("../login/pic/login_icon.png");
-    QString filePath = temDir.absolutePath();
+    QDir temDir(":/pic/login_icon.png");
+    QString filePath = temDir.canonicalPath();
     this->setWindowIcon(QIcon(filePath));
     //添加背景图片
     QPalette PAllbackground = this->palette();
-    QDir temDir2("../login/pic/login.jpg");
-    QString filePath2 = temDir2.absolutePath();
+    QDir temDir2(":/pic/login.jpg");
+    QString filePath2 = temDir2.canonicalPath();
     QImage ImgAllbackground(filePath2);
     QImage fitimgpic=ImgAllbackground.scaled(this->width(),this->height(), Qt::IgnoreAspectRatio);
     PAllbackground.setBrush(QPalette::Window, QBrush(fitimgpic));
@@ -34,7 +34,7 @@ void Changepass::on_pushButton_clicked()
     string u, p;
     vector <string> str;
 
-    QDir temDir("../login/user_pwd.txt");
+    QDir temDir("./user_pwd.txt");
     QString filePath = temDir.absolutePath();
 
     if (new_pass != new_pass2)
