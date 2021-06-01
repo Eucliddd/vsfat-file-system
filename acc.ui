@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Acc</class>
+ <widget class="QDialog" name="Acc">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>327</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>20</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>可读用户</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="write">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>20</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>可写用户</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="read">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>40</y>
+     <width>111</width>
+     <height>251</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="write_2">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>40</y>
+     <width>111</width>
+     <height>251</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="delR">
+   <property name="geometry">
+    <rect>
+     <x>72</x>
+     <y>228</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="delW">
+   <property name="geometry">
+    <rect>
+     <x>72</x>
+     <y>267</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BdelW">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>266</y>
+     <width>61</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>删除可写</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BdelR">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>228</y>
+     <width>61</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>删除可读</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="addR">
+   <property name="geometry">
+    <rect>
+     <x>73</x>
+     <y>160</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BaddR">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>160</y>
+     <width>61</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>添加可读</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BaddW">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>193</y>
+     <width>61</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>添加可写</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="addW">
+   <property name="geometry">
+    <rect>
+     <x>73</x>
+     <y>193</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="owner">
+   <property name="geometry">
+    <rect>
+     <x>73</x>
+     <y>42</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>27</x>
+     <y>45</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>所有者：</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="save">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>300</y>
+     <width>61</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>确认</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
