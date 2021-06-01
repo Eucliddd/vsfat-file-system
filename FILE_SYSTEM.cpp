@@ -240,6 +240,7 @@ void FILE_SYSTEM::init(){
     ifstream r(filePath.toStdString());
     r>>Super.cur>>Super.rest;
     Super.load();
+    qDebug()<<Super.cur<<endl;
 }
 
 void FILE_SYSTEM::exit(){
