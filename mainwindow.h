@@ -31,6 +31,8 @@ private slots:
     void actionChpass();
     void on_saveall_clicked();
     void actionPaste();
+    void actionHardLink();
+    void actionSoftLink();
     void on_pushButton_clicked();
 
     //void on_flash_clicked(bool checked);
@@ -47,5 +49,7 @@ private:
     QAction *chdir;
     QAction *chpass;
     QAction *paste;
+    QAction *hlink;
+    QAction *slink;
 };
 #endif // MAINWINDOW_H

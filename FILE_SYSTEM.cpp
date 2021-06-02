@@ -1,4 +1,5 @@
 #include "all.h"
+#include <algorithm>
 int FILES::Tot;
 int FOLDER::Tot;
 
@@ -212,21 +213,20 @@ void FILE_SYSTEM::debug() {
 */
 int FILE_SYSTEM::search(string name, int is_Folder) {
 
-    int retid = -1; /*/id*/
     if (is_Folder) {
         for (int i = 0; i < Folder[Cur_folder].Folder_list.size(); i++) {
             FOLDER p = Folder[Folder[Cur_folder].Folder_list[i]];
-            if (p.Name == name) retid = p.id;
+            if (p.Name == name) return p.id;
         }
     }
     else {
         for (int i = 0; i < Folder[Cur_folder].File_list.size(); i++) {
             FILES p = Files[Folder[Cur_folder].File_list[i]];
             cout<<"search file:"<<p.Name<<" "<<name<<" "<<p.id<<endl;
-            if (p.Name == name) retid = p.id;
+            if (p.Name == name) return p.id;
         }
     }
-    return retid;
+    return -1;
 }
 
 /**/
@@ -330,6 +330,7 @@ void FILE_SYSTEM::delet(string name,int isFolder,int pos){
 }
 
 void FILE_SYSTEM::deletFile(int pos,string name){
+    int id=-1;
     for(int i=0;i<Folder[pos].File_list.size();i++){
         if(Files[Folder[pos].File_list[i]].Name==name){
            FILES::Tot--;
@@ -337,7 +338,18 @@ void FILE_SYSTEM::deletFile(int pos,string name){
                Super.free(Files[Folder[pos].File_list[i]].Disk_list.back());
                Files[Folder[pos].File_list[i]].Disk_list.pop_back();
            }
+           id = Folder[pos].File_list[i];
            Folder[pos].File_list.erase(Folder[pos].File_list.begin()+i);
+           break;
+        }
+    }
+    for(int j=0;j<MAXN_FOLDER;j++){
+        if(Folder[j].isUsed()){
+            Folder[j].File_list
+                    .erase(remove(Folder[j].File_list.begin(),
+                                             Folder[j].File_list.end(),
+                                             id)
+                           ,Folder[j].File_list.end());
         }
     }
 }

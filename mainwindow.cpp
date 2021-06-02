@@ -21,15 +21,19 @@ MainWindow::MainWindow(QWidget *parent)
     chdir = new QAction(this);
     chpass = new QAction(this);
     paste = new QAction(this);
+    hlink = new QAction(this);
+    slink = new QAction(this);
 
     newFolder->setText("new Folder");
     newFile->setText("new File");
     showDisk->setText("show Disk");
-    pot->setText(tr(" 位式图 "));
+    pot->setText(tr("bitmap"));
     format->setText("format");
     chdir->setText("change Directory");
     chpass->setText("change Password");
     paste->setText("paste");
+    hlink->setText("hard link");
+    slink->setText("soft link");
 
     m_menu->addAction(newFolder);
     m_menu->addAction(newFile);
@@ -39,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_menu->addAction(chdir);
     m_menu->addAction(chpass);
     m_menu->addAction(paste);
+    m_menu->addAction(hlink);
+    m_menu->addAction(slink);
 
     connect(newFolder, SIGNAL(triggered()), this, SLOT(actionNewFolder()));
     connect(newFile, SIGNAL(triggered()), this, SLOT(actionNewFile()));
@@ -48,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(chdir, SIGNAL(triggered()), this, SLOT(actionChdir()));
     connect(chpass, SIGNAL(triggered()), this, SLOT(actionChpass()));
     connect(paste, SIGNAL(triggered()), this, SLOT(actionPaste()));
+    connect(hlink, SIGNAL(triggered()), this, SLOT(actionHardLink()));
+    connect(slink, SIGNAL(triggered()), this, SLOT(actionSoftLink()));
 
     ui->setupUi(this);
 }
@@ -108,6 +116,7 @@ void MainWindow::on_flash_clicked()
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
                     p->actionOpen();
+                    ui->flash->click();
         });
         QLabel *label=new QLabel(QString::fromStdString(tmp[i]));
         cout<<"tmp:"<<tmp[i]<<endl;
@@ -248,6 +257,7 @@ void MainWindow::actionChdir()
 {
     Chdir c;
     c.exec();
+    this->flash();
 }
 
 void MainWindow::actionPaste(){
@@ -297,6 +307,65 @@ void MainWindow::actionChpass()
     System.writelog("change password");
     Changepass cp;
     cp.exec();
+}
+
+void MainWindow::actionHardLink(){
+    if(System.clipBoard==-1){
+        return;
+    }
+    string fname=System.Files[System.clipBoard].Name;
+    //当前文件夹下有重名文件，即不能本地粘贴
+    for(int i=0;i<System.Folder[System.Cur_folder].File_list.size();i++){
+        int id=System.Folder[System.Cur_folder].File_list[i];
+        if(System.Files[id].Name==fname){
+            QMessageBox::warning(this, tr("Waring"),tr("有重名文件!"),QMessageBox::Yes);
+            return;
+        }
+    }
+    System.Folder[System.Cur_folder].File_list.push_back(System.clipBoard);
+    this->flash();
+    return;
+}
+
+void MainWindow::actionSoftLink(){
+    if(System.clipBoard==-1){
+        return;
+    }
+    string fname=System.Files[System.clipBoard].Name+".ink";
+    for(int i=0;i<System.Folder[System.Cur_folder].File_list.size();i++){
+        int id=System.Folder[System.Cur_folder].File_list[i];
+        if(System.Files[id].Name==fname){
+            QMessageBox::warning(this, tr("Waring"),tr("有重名文件!"),QMessageBox::Yes);
+            return;
+        }
+    }
+    int new_id;
+    for (int i = 0; i < MAXN_FILE; i++) {
+        if (!System.Files[i].isUsed()) {
+            new_id = i;
+            break;
+        }
+    }
+    System.Files->Tot++;
+    System.Files[new_id].id = new_id;
+    System.Files[new_id].Update_time = getTime();
+    System.Files[new_id].Has_load = true;
+    System.Files[new_id].Is_update = true;
+    System.Files[new_id].Acc_disk = System.Super.alloc();
+    System.Folder[System.Cur_folder].File_list.push_back(new_id);
+    std::cout<<"newfolder:\ncurfolder"<<System.Cur_folder<<" cnt:"<<System.Folder[System.Cur_folder].File_list.size()<<endl;
+    //控制信息初始化和持久化
+    System.Acces.init(System.username);
+    System.Acces.save(System.Files[new_id].Acc_disk);
+
+    System.writelog("new file");
+    System.Files[new_id].Name=fname;
+    System.Files[new_id].Data=to_string(System.clipBoard);
+    System.Files[new_id].save();
+//    cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
+//    accept();
+    this->flash();
+    return;
 }
 
 void MainWindow::on_MainWindow_destroyed()

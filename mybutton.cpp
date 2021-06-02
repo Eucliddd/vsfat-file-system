@@ -53,6 +53,7 @@ void myButton::actionOpen()
     if (isFolder) System.cd(name);
     else {
         int id=System.search(name,0);
+        if(id<0) return;
         if(not System.Acces.access(System.username,id,"r")){
             QMessageBox::warning(this, tr("Warning"),
                                  tr("无读取权限!"),
@@ -61,6 +62,9 @@ void myButton::actionOpen()
         }
         cout<<"open file:"<<id<<endl;
         System.Files[id].load();
+        string end=".ink";
+        if(name.size()>end.size() && !name.compare(name.size()-end.size(),end.size(),end))
+            id = atoi(System.Files[id].Data.c_str());
         Text w(id,System.Acces.access(System.username,id,"w"));
         w.exec();
     }
