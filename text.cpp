@@ -54,8 +54,8 @@ void Text::on_save_clicked()
         string fname=ui->filename->toPlainText().toStdString();
         if(fname=="") {
             QMessageBox::warning(this, tr("Waring"),
-                                  tr("文件名不能为空!"),
-                                  QMessageBox::Yes);
+                                 tr("文件名不能为空!"),
+                                 QMessageBox::Yes);
             return;
         }
         for(int i=0;i<System.Folder[System.Cur_folder].File_list.size();i++){
@@ -86,6 +86,7 @@ void Text::on_save_clicked()
 
         System.writelog("new file");
         System.Files[new_id].Name=fname;
+        System.Files[new_id].linkTimes=1;
         System.Files[new_id].Data=ui->text->toPlainText().toStdString();
         System.Files[new_id].save();
         cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
@@ -120,8 +121,8 @@ void Text::on_save_clicked()
     string fname=ui->filename->toPlainText().toStdString();
     if(fname=="") {
         QMessageBox::warning(this, tr("Waring"),
-                              tr("文件名不能为空!"),
-                              QMessageBox::Yes);
+                             tr("文件名不能为空!"),
+                             QMessageBox::Yes);
         return;
     }
     for(int i=0;i<System.Folder[System.Cur_folder].File_list.size();i++){
@@ -136,5 +137,5 @@ void Text::on_save_clicked()
     System.Files[id].Data=ui->text->toPlainText().toStdString();
     System.Files[id].save();
     cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
-   accept();
+    accept();
 }

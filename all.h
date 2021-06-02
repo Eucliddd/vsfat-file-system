@@ -37,13 +37,13 @@ struct FOLDER {
 
 struct FILES {
     static int Tot;         /*当前文件总数*/
-    string Name;                /*文件名*/
+    string Name;            /*文件名*/
+    int linkTimes;          /*文件链接次数*/
     string Update_time;         /*更新时间*/
     int id;                 /*文件id*/
     bool Has_load;          /*是否已读取标志位*/
     bool Is_update;         /*脏位标记*/
     string Data;            /*数据内容*/
-
     vector<int> Disk_list;  /*磁盘块列表*/
     int Acc_disk;			/*权限控制信息磁盘号*/
 

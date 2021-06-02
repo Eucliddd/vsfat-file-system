@@ -93,9 +93,9 @@ void MainWindow::on_flash_clicked()
         myButton *p=new myButton(tmp[i],1,0);
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
-                    System.cd(p->name);
-                    ui->flash->click();
-         });
+            System.cd(p->name);
+            ui->flash->click();
+        });
         QLabel *label;
         if(tmp[i]!="root"&&i!=0) label=new QLabel(QString::fromStdString(tmp[i]));
         else label=new QLabel(QString::fromStdString(".."));
@@ -115,8 +115,8 @@ void MainWindow::on_flash_clicked()
         myButton *p=new myButton(tmp[i],0,0);
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
-                    p->actionOpen();
-                    ui->flash->click();
+            p->actionOpen();
+            ui->flash->click();
         });
         QLabel *label=new QLabel(QString::fromStdString(tmp[i]));
         cout<<"tmp:"<<tmp[i]<<endl;
@@ -137,9 +137,9 @@ void MainWindow::on_flash_clicked()
 
 void  MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
-//    QMenu *menu = new QMenu(this);
-//    menu->addAction(tr("rename"));
-//    menu->addAction(tr("delete"));
+    //    QMenu *menu = new QMenu(this);
+    //    menu->addAction(tr("rename"));
+    //    menu->addAction(tr("delete"));
 
     m_menu->exec(QCursor::pos());
 }
@@ -207,7 +207,7 @@ void MainWindow::initTree()
             item = new QStandardItem(QString::fromStdString(System.Folder[li[i-1]].Name));
             QDir temDir("../login/pic/folder.png");
             QString filePath = temDir.absolutePath();
-            item->setIcon( QIcon(filePath));//�ǵø�·��������
+            item->setIcon( QIcon(filePath));//设置文件夹的图片
             m++;
             s.push(m);
             QStandardItem *tmp = items[last];
@@ -221,7 +221,7 @@ void MainWindow::initTree()
             cout<<"name --:"<<System.Files[t[b]].Name<<endl;
             QDir temDir("../login/pic/txt.png");
             QString filePath = temDir.absolutePath();
-            item->setIcon( QIcon(filePath));//�ǵø�·��������
+            item->setIcon( QIcon(filePath));//设置文件的图片
             QStandardItem *lastItem =items[last];
             lastItem->appendRow(item);
         }
@@ -294,10 +294,11 @@ void MainWindow::actionPaste(){
 
     System.writelog("new file");
     System.Files[new_id].Name=fname;
+    System.Files[new_id].linkTimes=1;
     System.Files[new_id].Data=System.Files[System.clipBoard].Data;
     System.Files[new_id].save();
-//    cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
-//    accept();
+    //    cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
+    //    accept();
     this->flash();
     return;
 }
@@ -314,7 +315,7 @@ void MainWindow::actionHardLink(){
         return;
     }
     string fname=System.Files[System.clipBoard].Name;
-    //当前文件夹下有重名文件，即不能本地粘贴
+    //当前文件夹下有重名文件，即不能建立硬链接
     for(int i=0;i<System.Folder[System.Cur_folder].File_list.size();i++){
         int id=System.Folder[System.Cur_folder].File_list[i];
         if(System.Files[id].Name==fname){
@@ -323,6 +324,8 @@ void MainWindow::actionHardLink(){
         }
     }
     System.Folder[System.Cur_folder].File_list.push_back(System.clipBoard);
+    //链接次数++
+    System.Files[System.clipBoard].linkTimes++;
     this->flash();
     return;
 }
@@ -332,6 +335,7 @@ void MainWindow::actionSoftLink(){
         return;
     }
     string fname=System.Files[System.clipBoard].Name+".ink";
+    //检测重名
     for(int i=0;i<System.Folder[System.Cur_folder].File_list.size();i++){
         int id=System.Folder[System.Cur_folder].File_list[i];
         if(System.Files[id].Name==fname){
@@ -360,10 +364,11 @@ void MainWindow::actionSoftLink(){
 
     System.writelog("new file");
     System.Files[new_id].Name=fname;
+    System.Files[new_id].linkTimes=1;
     System.Files[new_id].Data=to_string(System.clipBoard);
     System.Files[new_id].save();
-//    cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
-//    accept();
+    //    cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
+    //    accept();
     this->flash();
     return;
 }
