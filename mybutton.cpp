@@ -63,10 +63,16 @@ void myButton::actionOpen()
         cout<<"open file:"<<id<<endl;
         System.Files[id].load();
         string end=".ink";
-        if(name.size()>end.size() && !name.compare(name.size()-end.size(),end.size(),end))
-            id = atoi(System.Files[id].Data.c_str());
-        Text w(id,System.Acces.access(System.username,id,"w"));
-        w.exec();
+        //int source=-1;
+        if(name.size()>end.size() && !name.compare(name.size()-end.size(),end.size(),end)){
+            int source = atoi(System.Files[id].Data.c_str());
+            Text w(id,source,true,System.Acces.access(System.username,id,"w"));
+            w.exec();
+        }
+        else{
+            Text w(id,System.Acces.access(System.username,id,"w"));
+            w.exec();
+        }
     }
     System.writelog("open file "+name);
     qDebug() << "actionOne";
