@@ -14,7 +14,7 @@ myButton::myButton(string name,int isFolder,QWidget *parent): QPushButton(parent
 
     this->setFixedSize(50,50);
     this->setIconSize(QSize(50,50));
-
+    //添加右键目录
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
     m_menu = new QMenu(this);
@@ -125,13 +125,9 @@ void myButton::actionCopy(){
     int id=System.search(name,0);
     System.clipBoard=id;
 }
-
+//右键弹出菜单
 void  myButton::contextMenuEvent(QContextMenuEvent *event)
 {
-    //    QMenu *menu = new QMenu(this);
-    //    menu->addAction(tr("rename"));
-    //    menu->addAction(tr("delete"));
-
     m_menu->exec(QCursor::pos());
 }
 

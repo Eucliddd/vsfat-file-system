@@ -80,6 +80,7 @@ bool FILE_SYSTEM::fcreate(string user_name, string filename) {
     Files->Tot++;
     Files[new_id].id = new_id;
     Files[new_id].Name = filename;
+    Files[new_id].linkTimes=1;
     Files[new_id].Update_time = getTime();
     Files[new_id].Has_load = true;
     Files[new_id].Is_update = true;
@@ -134,9 +135,9 @@ void FILE_SYSTEM::loadFolder() {
     for (int i = 0; i < FILES::Tot; i++) {
         r >> id;
         Files[id].id=id;
-        r >>Files[id].Name>>Files[id].Update_time >>Files[id].Acc_disk >> num;
+        r >>Files[id].Name>>Files[id].linkTimes>>Files[id].Update_time >>Files[id].Acc_disk >> num;
         cout<<"load file:\n";
-        cout <<Files[id].Name<<" "<<Files[id].Update_time <<" "<<Files[id].Acc_disk <<" "<< num<<endl;;
+        cout <<Files[id].Name<<" "<<Files[id].linkTimes<<" "<<Files[id].Update_time <<" "<<Files[id].Acc_disk <<" "<< num<<endl;;
         for (int j = 0; j < num; j++) {
             r >> sub;
             Files[id].Disk_list.push_back(sub);
@@ -147,7 +148,7 @@ void FILE_SYSTEM::loadFolder() {
 
 }
 
-/*д*/
+/*保存index*/
 void FILE_SYSTEM::saveFolder() {
     QDir temDir("../login/index.txt");
     QString filePath = temDir.absolutePath();
@@ -167,7 +168,7 @@ void FILE_SYSTEM::saveFolder() {
     for (int i = 0; i < FILES::Tot; i++) {
         if (!Files[i].isUsed()) continue;
         FILES p = Files[i];
-        w << p.id << " " << p.Name << " " << p.Update_time <<" "<<p.Acc_disk<< " " << p.Disk_list.size();
+        w << p.id << " " << p.Name << " " <<p.linkTimes<< " " <<p.Update_time <<" "<<p.Acc_disk<< " " << p.Disk_list.size();
         for (int j = 0; j < p.Disk_list.size(); j++) w << " " << p.Disk_list[j];
         w << endl;
     }
@@ -261,8 +262,8 @@ void FILE_SYSTEM::format(){
     w<<1<<endl<<0<<" "<<"root"<<" "<<1<<" "<<0<<" "<<0<<endl;
     w<<0<<endl;
     w.close();
-//     QDir dir;
-//    qDebug() <<  dir.currentPath() << endl;
+    //     QDir dir;
+    //    qDebug() <<  dir.currentPath() << endl;
 }
 
 vector<string> FILE_SYSTEM::getFile(int isFolder){
@@ -328,30 +329,39 @@ void FILE_SYSTEM::delet(string name,int isFolder,int pos){
     }else deletFile(pos,name);
 
 }
-
+//pos:文件所在的文件夹
 void FILE_SYSTEM::deletFile(int pos,string name){
-    int id=-1;
+    int id=-1;//文件id
+    int index=-1;
     for(int i=0;i<Folder[pos].File_list.size();i++){
         if(Files[Folder[pos].File_list[i]].Name==name){
-           FILES::Tot--;
-           while(Files[Folder[pos].File_list[i]].Disk_list.size()){
-               Super.free(Files[Folder[pos].File_list[i]].Disk_list.back());
-               Files[Folder[pos].File_list[i]].Disk_list.pop_back();
-           }
-           id = Folder[pos].File_list[i];
-           Folder[pos].File_list.erase(Folder[pos].File_list.begin()+i);
-           break;
+            id = Folder[pos].File_list[i];
+            index=i;
+            break;
         }
     }
-    for(int j=0;j<MAXN_FOLDER;j++){
-        if(Folder[j].isUsed()){
-            Folder[j].File_list
-                    .erase(remove(Folder[j].File_list.begin(),
-                                             Folder[j].File_list.end(),
-                                             id)
-                           ,Folder[j].File_list.end());
+    if(id!=-1){//找到文件
+        Files[id].linkTimes--;
+        //从当前文件夹删除
+        Folder[pos].File_list.erase(Folder[pos].File_list.begin()+index);
+        //释放文件磁盘空间
+        if(Files[id].linkTimes==0){
+            FILES::Tot--;
+            while(Files[id].Disk_list.size()){
+                Super.free(Files[id].Disk_list.back());
+                Files[id].Disk_list.pop_back();
+            }
         }
     }
+    //    for(int j=0;j<MAXN_FOLDER;j++){
+    //        if(Folder[j].isUsed()){
+    //            Folder[j].File_list
+    //                    .erase(remove(Folder[j].File_list.begin(),
+    //                                  Folder[j].File_list.end(),
+    //                                  id)
+    //                           ,Folder[j].File_list.end());
+    //        }
+    //    }
 }
 
 void FILE_SYSTEM::writelog(string op){

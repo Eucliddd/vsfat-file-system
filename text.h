@@ -13,6 +13,7 @@ private:
     bool create=false;
 public:
     explicit Text(int id,int editable=1,QWidget *parent = nullptr);
+
     explicit Text(int id,int editable,bool create,QWidget *parent= nullptr);
     ~Text();
     void set(QString a);
