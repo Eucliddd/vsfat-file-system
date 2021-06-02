@@ -23,6 +23,23 @@ Text::Text(int id,int editable,bool __,QWidget *parent) :
     this->create=true;
     ui->setupUi(this);
 }
+
+Text::Text(int link,int source, bool __,int editable,QWidget *parent):
+    QDialog(parent),
+    ui(new Ui::Text)
+{
+    this->soft_link=source;
+    ui->setupUi(this);
+    this->id=link;
+    ui->filename->setPlainText(QString::fromStdString(System.Files[link].Name));
+    System.Files[source].load();
+    ui->text->setPlainText(QString::fromStdString(System.Files[source].Data));
+    if (!editable){
+        cout<<"read only"<<endl;
+        ui->filename->setReadOnly(true);
+        ui->text->setReadOnly(true);
+    }
+}
 Text::~Text(){
     delete ui;
 }
@@ -76,6 +93,29 @@ void Text::on_save_clicked()
         return;
     }
 
+    if(soft_link!=-1){
+        string fname=ui->filename->toPlainText().toStdString();
+        if(fname=="") {
+            QMessageBox::warning(this, tr("Waring"),
+                                  tr("文件名不能为空!"),
+                                  QMessageBox::Yes);
+            return;
+        }
+        for(int i=0;i<System.Folder[System.Cur_folder].File_list.size();i++){
+            int id=System.Folder[System.Cur_folder].File_list[i];
+            if(id==this->id) continue;
+            if(System.Files[id].Name==fname){
+                QMessageBox::warning(this, tr("Waring"),tr("有重名文件!"),QMessageBox::Yes);
+                return;
+            }
+        }
+        System.Files[id].Name=fname;
+        System.Files[soft_link].Data=ui->text->toPlainText().toStdString();
+        //System.Files[id].save();
+        System.Files[soft_link].save();
+        accept();
+        return;
+    }
     cout<<"enter save"<<endl;
     string fname=ui->filename->toPlainText().toStdString();
     if(fname=="") {

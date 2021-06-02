@@ -11,9 +11,11 @@ class Text : public QDialog
     Q_OBJECT
 private:
     bool create=false;
+    int soft_link = -1;
 public:
     explicit Text(int id,int editable=1,QWidget *parent = nullptr);
-    explicit Text(int id,int editable,bool create,QWidget *parent= nullptr);
+    explicit Text(int id,int editable,bool flag,QWidget *parent= nullptr);
+    explicit Text(int link,int source, bool __,int editable,QWidget *parent= nullptr);
     ~Text();
     void set(QString a);
     int id;
