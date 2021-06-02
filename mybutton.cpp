@@ -22,21 +22,25 @@ myButton::myButton(string name,int isFolder,QWidget *parent): QPushButton(parent
     delet = new QAction(this);
     rename = new QAction(this);
     if(!isFolder) acc = new QAction(this);
+    if(!isFolder) copy=new QAction(this);//构造复制按钮
 
     open->setText("open");
     delet->setText("delete");
     rename->setText("rename");
     if(!isFolder) acc->setText("权限管理");
+    if(!isFolder) copy->setText("copy");
 
     m_menu->addAction(open);
     m_menu->addAction(delet);
     m_menu->addAction(rename);
     if(!isFolder) m_menu->addAction(acc);
+    if(!isFolder) m_menu->addAction(copy);
 
     connect(open, SIGNAL(triggered()), this, SLOT(actionOpen()));
     connect(delet, SIGNAL(triggered()), this, SLOT(actionDelete()));
     connect(rename, SIGNAL(triggered()), this, SLOT(actionRename()));
     if(!isFolder) connect(acc, SIGNAL(triggered()), this, SLOT(actionAcc()));
+    if(!isFolder) connect(copy,SIGNAL(triggered()),this,SLOT(actionCopy()));
 }
 
 myButton::~myButton()
@@ -51,8 +55,8 @@ void myButton::actionOpen()
         int id=System.search(name,0);
         if(not System.Acces.access(System.username,id,"r")){
             QMessageBox::warning(this, tr("Warning"),
-                                  tr("无读取权限!"),
-                                  QMessageBox::Yes);
+                                 tr("无读取权限!"),
+                                 QMessageBox::Yes);
             return;
         }
         cout<<"open file:"<<id<<endl;
@@ -72,8 +76,8 @@ void myButton::actionDelete()
     cout<<"check ghh: "<<id<<endl;
     if(not isFolder &&not System.Acces.access(System.username,id,"w")){
         QMessageBox::warning(this, tr("Warning"),
-                              tr("无修改权限!"),
-                              QMessageBox::Yes);
+                             tr("无修改权限!"),
+                             QMessageBox::Yes);
         return;
     }
 
@@ -88,8 +92,8 @@ void myButton::actionRename()
     int id=System.search(name,0);
     if(not System.Acces.access(System.username,id,"w")){
         QMessageBox::warning(this, tr("Warning"),
-                              tr("无修改权限!"),
-                              QMessageBox::Yes);
+                             tr("无修改权限!"),
+                             QMessageBox::Yes);
         return;
     }
     System.writelog("rename file "+name);
@@ -103,8 +107,8 @@ void myButton::actionAcc(){
     System.Acces.load(id);
     if(not System.Acces.access(System.username,id,"acc")){
         QMessageBox::warning(this, tr("Warning"),
-                              tr("无所有权限!"),
-                              QMessageBox::Yes);
+                             tr("无所有权限!"),
+                             QMessageBox::Yes);
         return;
     }
     System.writelog("change access "+name);
@@ -113,11 +117,16 @@ void myButton::actionAcc(){
     w.exec();
 }
 
+void myButton::actionCopy(){
+    int id=System.search(name,0);
+    System.clipBoard=id;
+}
+
 void  myButton::contextMenuEvent(QContextMenuEvent *event)
 {
-//    QMenu *menu = new QMenu(this);
-//    menu->addAction(tr("rename"));
-//    menu->addAction(tr("delete"));
+    //    QMenu *menu = new QMenu(this);
+    //    menu->addAction(tr("rename"));
+    //    menu->addAction(tr("delete"));
 
     m_menu->exec(QCursor::pos());
 }

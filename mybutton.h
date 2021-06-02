@@ -24,13 +24,14 @@ public slots:
     void actionDelete();
     void actionRename();
     void actionAcc();
+    void actionCopy();
 
 private:
     QAction *open;
     QAction *delet;
     QAction *rename;
     QAction *acc;
-
+    QAction *copy;
 };
 
 #endif // MYBUTTON_H

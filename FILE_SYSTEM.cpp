@@ -50,9 +50,8 @@ void FILE_SYSTEM::ls() {
 bool FILE_SYSTEM::fcreate(string user_name, string filename) {
     string mode = "WRITE";
 
-    if (Files->Tot == MAXN_FILE)//
-    {
-        cout << "磁盘已满" << endl;
+    if (Files->Tot == MAXN_FILE){
+        cout << "文件数量以达上限" << endl;
         return false;
     }
     if (iget(filename) != -1) //

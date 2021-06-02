@@ -30,7 +30,7 @@ private slots:
     void actionChdir();
     void actionChpass();
     void on_saveall_clicked();
-
+    void actionPaste();
     void on_pushButton_clicked();
 
     //void on_flash_clicked(bool checked);
@@ -46,5 +46,6 @@ private:
     QAction *format;
     QAction *chdir;
     QAction *chpass;
+    QAction *paste;
 };
 #endif // MAINWINDOW_H

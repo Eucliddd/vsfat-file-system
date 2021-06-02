@@ -125,6 +125,8 @@ struct FILE_SYSTEM {
     FILES Files[MAXN_FILE];
     FOLDER Folder[MAXN_FOLDER];
     ACCESS Acces;
+    //copy-paste
+    int clipBoard=-1;
 
     vector<string> path;
     /*
