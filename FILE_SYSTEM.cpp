@@ -325,7 +325,7 @@ void FILE_SYSTEM::delet(string name,int isFolder,int pos){
                 cout<<"delete:"<<Folder[back].Name<<" "<<pos<<endl;
                 Folder[pos].Tot--;
             }
-            Folder[pos].Folder_list.pop_back();
+            Folder[pos].Folder_list.clear();
         }
     }else deletFile(pos,name);
 
