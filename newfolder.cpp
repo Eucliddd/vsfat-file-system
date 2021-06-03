@@ -39,3 +39,9 @@ void NewFolder::on_pushButton_clicked()
     accept();
 
 }
+
+void NewFolder::on_pushButton_2_clicked()
+{
+    this->close();
+}
+
