@@ -28,7 +28,7 @@ struct FOLDER {
     string Name;        /*Name - 当前文件目录名字*/
     int id;             /*id - 记录当前目录id*/
 
-    vector<int> Folder_list;    /*当前目录的子目录*/
+    vector<int> Folder_list;    /*当前目录的子目录，0号始终为上级*/
     vector<int> File_list;      /*当前目录的文件*/
 
     /*返回当前目录是否被用*/

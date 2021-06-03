@@ -278,21 +278,36 @@ vector<string> FILE_SYSTEM::getFile(int isFolder){
     }
     return ret;
 }
-
+/*
+ * name:新建文件夹的名字
+ * return:-1,文件夹名重复;-2,文件夹数量达到上限
+ */
 int FILE_SYSTEM::newFolder(string name){
-    FOLDER p=Folder[Cur_folder];
+    FOLDER p=Folder[Cur_folder];//当前文件夹下的子文件夹
     int flag=0;
+    //检测重名
     for(int i=0;i<p.Folder_list.size();i++){
         int pp=p.Folder_list[i];
-        if(Folder[pp].Name==name) flag=1;
+        if(Folder[pp].Name==name) {
+            flag=1;
+            break;
+        }
     }
-    if(flag or FOLDER::Tot==MAXN_FOLDER-1) return -1;
+    //重名
+    if(flag){
+        return -1;
+    }
+    //文件夹的数量达到上限
+    if(FOLDER::Tot==MAXN_FOLDER-1){
+        return -2;
+    }
+    //插入文件夹数组并加入当前文件夹
     for(int i=0;i<MAXN_FOLDER;i++){
         if(Folder[i].isUsed()) continue;
-        Folder[i].Tot++;
+        FOLDER::Tot++;
         cout<<"id:"<<i<<" "<<Cur_folder<<endl;
-        Folder[Cur_folder].Folder_list.push_back(i);
-        Folder[i].Folder_list.push_back(Cur_folder);
+        Folder[Cur_folder].Folder_list.push_back(i);//加入当前文件夹
+        Folder[i].Folder_list.push_back(Cur_folder);//新文件夹下加入上级文件夹
         Folder[i].Name=name;
         Folder[i].File_list.clear();
         Folder[i].id=i;
@@ -300,22 +315,28 @@ int FILE_SYSTEM::newFolder(string name){
     }
 }
 
+/*
+ * name:文件夹的名字
+ * isFolder:删除的是否未为文件夹
+ * pos:当前文件夹的id
+ */
 void FILE_SYSTEM::delet(string name,int isFolder,int pos){
     if(isFolder){
+        //
         for(int i=1;i<Folder[pos].Folder_list.size();i++){
             FOLDER f=Folder[Folder[pos].Folder_list[i]];
             cout<<"check folder:"<<name<<" "<<Folder[Folder[pos].Folder_list[i]].Name<<endl;
             if(name==Folder[Folder[pos].Folder_list[i]].Name) {
                 cout<<"delete folder:"<<name<<endl;
-                delet(name,isFolder,f.id);
+                delet(name,isFolder,f.id);//递归删除
                 Folder[pos].Folder_list.erase(Folder[pos].Folder_list.begin()+i);
-                Folder[pos].Tot--;
+                FOLDER::Tot--;
             }
 
         }
 
         if(name==Folder[pos].Name){
-            while(Folder[pos].File_list.size()) {
+            while(!Folder[pos].File_list.empty()) {
                 deletFile(pos,Files[Folder[pos].File_list.back()].Name);
             }
             while(Folder[pos].Folder_list.size()!=1){
@@ -323,8 +344,9 @@ void FILE_SYSTEM::delet(string name,int isFolder,int pos){
                 delet(Folder[back].Name,isFolder,back);
                 Folder[pos].Folder_list.pop_back();
                 cout<<"delete:"<<Folder[back].Name<<" "<<pos<<endl;
-                Folder[pos].Tot--;
+                FOLDER::Tot--;
             }
+            Folder[pos].Folder_list.clear();//格式化清空
         }
     }else deletFile(pos,name);
 
@@ -347,21 +369,16 @@ void FILE_SYSTEM::deletFile(int pos,string name){
         //释放文件磁盘空间
         if(Files[id].linkTimes==0){
             FILES::Tot--;
+            //释放控制信息块
+            Super.free(Files[id].Acc_disk);
+            //标记为未使用
+            Files[id].Acc_disk=0;
             while(Files[id].Disk_list.size()){
                 Super.free(Files[id].Disk_list.back());
                 Files[id].Disk_list.pop_back();
             }
         }
     }
-    //    for(int j=0;j<MAXN_FOLDER;j++){
-    //        if(Folder[j].isUsed()){
-    //            Folder[j].File_list
-    //                    .erase(remove(Folder[j].File_list.begin(),
-    //                                  Folder[j].File_list.end(),
-    //                                  id)
-    //                           ,Folder[j].File_list.end());
-    //        }
-    //    }
 }
 
 void FILE_SYSTEM::writelog(string op){

@@ -77,7 +77,7 @@ void Text::on_save_clicked()
         System.Files[new_id].Update_time = getTime();
         System.Files[new_id].Has_load = true;
         System.Files[new_id].Is_update = true;
-        System.Files[new_id].Acc_disk = System.Super.alloc();
+        System.Files[new_id].Acc_disk = System.Super.alloc();//分配存储访问控制信息的块
         System.Folder[System.Cur_folder].File_list.push_back(new_id);
         std::cout<<"newfolder:\ncurfolder"<<System.Cur_folder<<" cnt:"<<System.Folder[System.Cur_folder].File_list.size()<<endl;
         //控制信息初始化和持久化
