@@ -381,6 +381,7 @@ void FILE_SYSTEM::deletFile(int pos,string name){
                 Files[id].Disk_list.pop_back();
             }
         }
+
     }
 }
 
