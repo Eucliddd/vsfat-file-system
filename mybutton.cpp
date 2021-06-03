@@ -99,6 +99,7 @@ void myButton::actionDelete()
 
     System.delet(name,isFolder,System.Cur_folder);
     System.writelog("delete file "+name);
+
     qDebug() << "actionTwo";
     this->click();
 }
