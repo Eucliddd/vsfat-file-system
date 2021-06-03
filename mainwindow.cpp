@@ -97,7 +97,7 @@ void MainWindow::on_flash_clicked()
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
             System.cd(p->name);
-            ui->flash->click();
+            flash();
         });
         QLabel *label;
         if(nameList[i]!="root"&&i!=0) label=new QLabel(QString::fromStdString(nameList[i]));
@@ -116,11 +116,11 @@ void MainWindow::on_flash_clicked()
 
     for(int i=0;pos<tot;i++,pos++){
         cout<<"new button:"<<nameList[i]<<endl;
-        myButton *p=new myButton(nameList[i],0,0);
+        myButton *p=new myButton(nameList[i],0,this);
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
             p->actionOpen();
-            ui->flash->click();
+            flash();
         });
         QLabel *label=new QLabel(QString::fromStdString(nameList[i]));
         cout<<"tmp:"<<nameList[i]<<endl;
@@ -136,6 +136,7 @@ void MainWindow::on_flash_clicked()
         path.push_back('/');
         path+=QString::fromStdString(System.path[i]);
     }
+    this->initTree();
     ui->path->setText(path);
     this->initTree();
 }
@@ -190,13 +191,13 @@ void MainWindow::initTree()
     goodsModel->setHeaderData(0, Qt::Horizontal, tr("Quick Access"));
 
 
+
     queue <int> q;//文件夹id队列
     QList<QStandardItem *> items;//文件夹对应的Item队列
     int itemsIndex = 0;//当前文件夹在items对应的index
 
     items.push_back(new QStandardItem("root"));
     q.push(0);
-
     QStandardItem *item;
     while(!q.empty())
     {
@@ -212,6 +213,7 @@ void MainWindow::initTree()
             QDir temDir("../login/pic/folder.png");
             QString filePath = temDir.absolutePath();
             item->setIcon( QIcon(filePath));//设置文件夹的图片
+
             items.push_back(item);
             items[itemsIndex]->appendRow(item);
         }
@@ -223,8 +225,7 @@ void MainWindow::initTree()
             cout<<"name --:"<<System.Files[t[b]].Name<<endl;
             QDir temDir("../login/pic/txt.png");
             QString filePath = temDir.absolutePath();
-            item->setIcon( QIcon(filePath));//设置文件的图片
-
+            item->setIcon( QIcon(filePath));//设置文件的图
             items[itemsIndex]->appendRow(item);
         }
         itemsIndex++;

@@ -66,6 +66,12 @@ void myButton::actionOpen()
         //int source=-1;
         if(name.size()>end.size() && !name.compare(name.size()-end.size(),end.size(),end)){
             int source = atoi(System.Files[id].Data.c_str());
+            if(!System.Files[source].isUsed()){
+                QMessageBox::warning(this, tr("Warning"),
+                                     tr("文件已丢失!"),
+                                     QMessageBox::Yes);
+                return;
+            }
             Text w(id,source,true,System.Acces.access(System.username,id,"w"));
             w.exec();
         }
@@ -93,6 +99,7 @@ void myButton::actionDelete()
 
     System.delet(name,isFolder,System.Cur_folder);
     System.writelog("delete file "+name);
+
     qDebug() << "actionTwo";
     this->click();
 }
