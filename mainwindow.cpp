@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    on_saveall_clicked();
+    on_saveall_clicked();//保存
     delete ui;
 }
 void MainWindow::actionFormat(){
@@ -73,53 +73,57 @@ void MainWindow::actionFormat(){
     System.writelog("format disk");
 }
 
+//刷新界面
 void MainWindow::on_flash_clicked()
 {
-    QLayoutItem *child;
     QLayout* pLayout = (QLayout*)ui->box;
+    QLayoutItem *child;
+    //清空组件
     while(child = pLayout->takeAt(0))
     {
         QWidget* pWidget = child->widget();
-        pWidget->deleteLater();
-        delete child;
+        pWidget->deleteLater();//延迟删除
+        delete child;//删除组件
     }
 
     cout<<"flash clicked\n";
-    vector<string> tmp=System.getFile(1);
+    //添加文件夹显示
+    vector<string> nameList=System.getFile(1);
     ui->box->setRowStretch(5,10);
-    int tot=tmp.size();
+    int tot=nameList.size();
     int pos=0;
     for(int i=0;pos<tot;i++,pos++){
-        myButton *p=new myButton(tmp[i],1,0);
+        myButton *p=new myButton(nameList[i],1,0);
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
             System.cd(p->name);
             ui->flash->click();
         });
         QLabel *label;
-        if(tmp[i]!="root"&&i!=0) label=new QLabel(QString::fromStdString(tmp[i]));
-        else label=new QLabel(QString::fromStdString(".."));
+        if(nameList[i]!="root"&&i!=0) label=new QLabel(QString::fromStdString(nameList[i]));
+        else label=new QLabel(QString::fromStdString(".."));//上级目录特殊显示
         label->setAlignment(Qt::AlignHCenter);
         label->setFixedSize(50,50);
         ui->box->addWidget(label,pos/5*2+1,pos%5);
 
     }
-    tmp=System.getFile(0);
-    cout<<"filelist:"<<tmp.size()<<endl;
-    for(int i=0;i<tmp.size();i++) cout<<tmp[i]<<" ";
+    //添加文件显示
+    nameList=System.getFile(0);
+    cout<<"filelist:"<<nameList.size()<<endl;
+    for(int i=0;i<nameList.size();i++) cout<<nameList[i]<<" ";
     cout<<endl;
-    tot+=tmp.size();
+    tot+=nameList.size();
 
     for(int i=0;pos<tot;i++,pos++){
-        cout<<"new button:"<<tmp[i]<<endl;
-        myButton *p=new myButton(tmp[i],0,0);
+        cout<<"new button:"<<nameList[i]<<endl;
+        myButton *p=new myButton(nameList[i],0,0);
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
             p->actionOpen();
             ui->flash->click();
         });
-        QLabel *label=new QLabel(QString::fromStdString(tmp[i]));
-        cout<<"tmp:"<<tmp[i]<<endl;
+        QLabel *label=new QLabel(QString::fromStdString(nameList[i]));
+        cout<<"tmp:"<<nameList[i]<<endl;
         label->setAlignment(Qt::AlignHCenter);
         label->setFixedSize(50,15);
         ui->box->addWidget(label,pos/5*2+1,pos%5);
@@ -135,12 +139,9 @@ void MainWindow::on_flash_clicked()
 
 }
 
+//右键槽函数
 void  MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
-    //    QMenu *menu = new QMenu(this);
-    //    menu->addAction(tr("rename"));
-    //    menu->addAction(tr("delete"));
-
     m_menu->exec(QCursor::pos());
 }
 
@@ -180,18 +181,18 @@ void MainWindow::flash(){
 }
 void MainWindow::initTree()
 {
-    //����model
+
     QStandardItemModel *goodsModel = new QStandardItemModel(0, 1,this);
     goodsModel->setHeaderData(0, Qt::Horizontal, tr("Quick Access"));
 
-    //��ʾĿ¼���ļ�
+
     queue <int> q;
     queue <int> s;
     QList<QStandardItem *> items;
     QStandardItem *item;
     vector <int> li;
     int m=0;
-    /*root������*/
+
     QStandardItem *it = new QStandardItem("root");
     items.push_back(it);
     q.push(0);

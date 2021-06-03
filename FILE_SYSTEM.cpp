@@ -165,7 +165,7 @@ void FILE_SYSTEM::saveFolder() {
         w << endl;
     }
     w << FILES::Tot << endl;
-    for (int i = 0; i < FILES::Tot; i++) {
+    for (int i = 0; i < MAXN_FILE; i++) {
         if (!Files[i].isUsed()) continue;
         FILES p = Files[i];
         w << p.id << " " << p.Name << " " <<p.linkTimes<< " " <<p.Update_time <<" "<<p.Acc_disk<< " " << p.Disk_list.size();
@@ -265,7 +265,10 @@ void FILE_SYSTEM::format(){
     //     QDir dir;
     //    qDebug() <<  dir.currentPath() << endl;
 }
-
+/*
+ * 获取当前文件夹下所有文件/子文件夹的名字
+ * isFolder:是否为文件夹
+ */
 vector<string> FILE_SYSTEM::getFile(int isFolder){
     vector<string> ret;
     FOLDER p=Folder[Cur_folder];
