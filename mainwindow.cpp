@@ -128,6 +128,7 @@ void MainWindow::on_flash_clicked()
         label->setFixedSize(50,15);
         ui->box->addWidget(label,pos/5*2+1,pos%5);
     }
+    //显示路径
     QString path="/root";
     for(int i=0;i<System.path.size();i++){
         if(i==0&&System.path[i]=="root")
@@ -137,7 +138,7 @@ void MainWindow::on_flash_clicked()
     }
     this->initTree();
     ui->path->setText(path);
-
+    this->initTree();
 }
 
 //右键槽函数
@@ -173,13 +174,16 @@ void MainWindow::actionShowDisk()
     qDebug() << "actionThree";
 
 }
+
 void MainWindow::actionPot(){
     Potential_figure w;
 }
+
 void MainWindow::flash(){
     ui->flash->click();
     initTree();
 }
+
 void MainWindow::initTree()
 {
 
@@ -187,36 +191,33 @@ void MainWindow::initTree()
     goodsModel->setHeaderData(0, Qt::Horizontal, tr("Quick Access"));
 
 
-    queue <int> q;
-    //queue <int> s;
-    QList<QStandardItem *> items;
-    QStandardItem *item;
-    //vector <int> li;
-//    int m=0;
 
-    QStandardItem *it = new QStandardItem("root");
-    items.push_back(it);
+    queue <int> q;//文件夹id队列
+    QList<QStandardItem *> items;//文件夹对应的Item队列
+    int itemsIndex = 0;//当前文件夹在items对应的index
+
+    items.push_back(new QStandardItem("root"));
     q.push(0);
-//    s.push(0);
-    int index=0;
-    while(q.size())
+    QStandardItem *item;
+    while(!q.empty())
     {
         int front = q.front();
-        //int last = s.front();
+
+        //加入子文件夹
         for(int i = 1;i < System.Folder[front].Folder_list.size();i++)
         {
-            //li.push_back(System.Folder[front].Folder_list[i]);
-            q.push(System.Folder[front].Folder_list[i]);
-            item = new QStandardItem(QString::fromStdString(System.Folder[System.Folder[front].Folder_list[i]].Name));
+            int floderId=System.Folder[front].Folder_list[i];
+            q.push(floderId);
+
+            item = new QStandardItem(QString::fromStdString(System.Folder[floderId].Name));
             QDir temDir("../login/pic/folder.png");
             QString filePath = temDir.absolutePath();
             item->setIcon( QIcon(filePath));//设置文件夹的图片
-//            m++;
-//            s.push(m);
-            QStandardItem *tmp = items[index];
+
             items.push_back(item);
-            tmp->appendRow(item);
+            items[itemsIndex]->appendRow(item);
         }
+        //加入子文件
         vector<int> t = System.Folder[front].File_list;
         for(int b = 0;b < System.Folder[front].File_list.size();b++)
         {
@@ -224,15 +225,13 @@ void MainWindow::initTree()
             cout<<"name --:"<<System.Files[t[b]].Name<<endl;
             QDir temDir("../login/pic/txt.png");
             QString filePath = temDir.absolutePath();
-            item->setIcon( QIcon(filePath));//设置文件的图片
-            QStandardItem *lastItem =items[index];
-            lastItem->appendRow(item);
+            item->setIcon( QIcon(filePath));//设置文件的图
+            items[itemsIndex]->appendRow(item);
         }
+        itemsIndex++;
         q.pop();
-        //s.pop();
-        index++;
-        //li.clear();
     }
+
     QStandardItem *tmp = items[0];
     goodsModel->appendRow(tmp);
     ui->treeView->setModel(goodsModel);
