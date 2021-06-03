@@ -17,7 +17,25 @@ NewFolder::~NewFolder()
 void NewFolder::on_pushButton_clicked()
 {
     string str=ui->text->toPlainText().toStdString();
-    System.newFolder(str);
+    if(str=="") {
+        QMessageBox::warning(this, tr("Waring"),
+                             tr("文件夹名不能为空!"),
+                             QMessageBox::Yes);
+        return;
+    }
+    int res=System.newFolder(str);
+    if(res==-1){
+        QMessageBox::warning(this, tr("Waring"),
+                             tr("文件夹名重复!"),
+                             QMessageBox::Yes);
+        return;
+    }
+    if(res==-2){
+        QMessageBox::warning(this, tr("Waring"),
+                             tr("文件夹数量达到上限"),
+                             QMessageBox::Yes);
+        return;
+    }
     accept();
 
 }

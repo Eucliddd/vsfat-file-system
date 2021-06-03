@@ -2,6 +2,7 @@
 #include <QDialog>
 extern FILE_SYSTEM System;
 bool FILES::isUsed() {
+    //0号块为引导块，同时用作标识
     return Acc_disk != 0;
 }
 
