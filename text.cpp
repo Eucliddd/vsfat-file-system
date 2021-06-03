@@ -89,7 +89,7 @@ void Text::on_save_clicked()
         System.Files[new_id].linkTimes=1;
         System.Files[new_id].Data=ui->text->toPlainText().toStdString();
         System.Files[new_id].save();
-        cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
+        //cout<<"file save:\n filename:"<<fname<<" "<<"DAta:"<<System.Files[id].Data<<endl;
         accept();
         return;
     }

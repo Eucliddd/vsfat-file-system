@@ -165,7 +165,7 @@ void FILE_SYSTEM::saveFolder() {
         w << endl;
     }
     w << FILES::Tot << endl;
-    for (int i = 0; i < FILES::Tot; i++) {
+    for (int i = 0; i < MAXN_FILE; i++) {
         if (!Files[i].isUsed()) continue;
         FILES p = Files[i];
         w << p.id << " " << p.Name << " " <<p.linkTimes<< " " <<p.Update_time <<" "<<p.Acc_disk<< " " << p.Disk_list.size();
@@ -325,6 +325,7 @@ void FILE_SYSTEM::delet(string name,int isFolder,int pos){
                 cout<<"delete:"<<Folder[back].Name<<" "<<pos<<endl;
                 Folder[pos].Tot--;
             }
+            Folder[pos].Folder_list.pop_back();
         }
     }else deletFile(pos,name);
 
@@ -347,11 +348,13 @@ void FILE_SYSTEM::deletFile(int pos,string name){
         //释放文件磁盘空间
         if(Files[id].linkTimes==0){
             FILES::Tot--;
+            Files[id].Acc_disk=0;
             while(Files[id].Disk_list.size()){
                 Super.free(Files[id].Disk_list.back());
                 Files[id].Disk_list.pop_back();
             }
         }
+
     }
     //    for(int j=0;j<MAXN_FOLDER;j++){
     //        if(Folder[j].isUsed()){
