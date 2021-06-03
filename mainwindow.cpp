@@ -93,11 +93,11 @@ void MainWindow::on_flash_clicked()
     int tot=nameList.size();
     int pos=0;
     for(int i=0;pos<tot;i++,pos++){
-        myButton *p=new myButton(nameList[i],1,0);
+        myButton *p=new myButton(nameList[i],1,this);
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
             System.cd(p->name);
-            ui->flash->click();
+            flash();
         });
         QLabel *label;
         if(nameList[i]!="root"&&i!=0) label=new QLabel(QString::fromStdString(nameList[i]));
@@ -116,11 +116,11 @@ void MainWindow::on_flash_clicked()
 
     for(int i=0;pos<tot;i++,pos++){
         cout<<"new button:"<<nameList[i]<<endl;
-        myButton *p=new myButton(nameList[i],0,0);
+        myButton *p=new myButton(nameList[i],0,this);
         ui->box->addWidget(p,pos/5*2,pos%5);
         connect(p, &QPushButton::clicked, this, [=](){
             p->actionOpen();
-            ui->flash->click();
+            flash();
         });
         QLabel *label=new QLabel(QString::fromStdString(nameList[i]));
         cout<<"tmp:"<<nameList[i]<<endl;
@@ -135,6 +135,7 @@ void MainWindow::on_flash_clicked()
         path.push_back('/');
         path+=QString::fromStdString(System.path[i]);
     }
+    this->initTree();
     ui->path->setText(path);
 
 }
@@ -187,31 +188,32 @@ void MainWindow::initTree()
 
 
     queue <int> q;
-    queue <int> s;
+    //queue <int> s;
     QList<QStandardItem *> items;
     QStandardItem *item;
-    vector <int> li;
-    int m=0;
+    //vector <int> li;
+//    int m=0;
 
     QStandardItem *it = new QStandardItem("root");
     items.push_back(it);
     q.push(0);
-    s.push(0);
+//    s.push(0);
+    int index=0;
     while(q.size())
     {
         int front = q.front();
-        int last = s.front();
+        //int last = s.front();
         for(int i = 1;i < System.Folder[front].Folder_list.size();i++)
         {
-            li.push_back(System.Folder[front].Folder_list[i]);
-            q.push(li[i-1]);
-            item = new QStandardItem(QString::fromStdString(System.Folder[li[i-1]].Name));
+            //li.push_back(System.Folder[front].Folder_list[i]);
+            q.push(System.Folder[front].Folder_list[i]);
+            item = new QStandardItem(QString::fromStdString(System.Folder[System.Folder[front].Folder_list[i]].Name));
             QDir temDir("../login/pic/folder.png");
             QString filePath = temDir.absolutePath();
             item->setIcon( QIcon(filePath));//设置文件夹的图片
-            m++;
-            s.push(m);
-            QStandardItem *tmp = items[last];
+//            m++;
+//            s.push(m);
+            QStandardItem *tmp = items[index];
             items.push_back(item);
             tmp->appendRow(item);
         }
@@ -223,12 +225,13 @@ void MainWindow::initTree()
             QDir temDir("../login/pic/txt.png");
             QString filePath = temDir.absolutePath();
             item->setIcon( QIcon(filePath));//设置文件的图片
-            QStandardItem *lastItem =items[last];
+            QStandardItem *lastItem =items[index];
             lastItem->appendRow(item);
         }
         q.pop();
-        s.pop();
-        li.clear();
+        //s.pop();
+        index++;
+        //li.clear();
     }
     QStandardItem *tmp = items[0];
     goodsModel->appendRow(tmp);
